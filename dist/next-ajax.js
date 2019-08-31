@@ -2,7 +2,7 @@
  * name: next-ajax
  * url: https://github.com/afeiship/next-ajax
  * version: 1.0.0
- * date: 2019-08-31T15:47:40.305Z
+ * date: 2019-08-31T15:51:15.522Z
  * license: MIT
  */
 
@@ -88,10 +88,13 @@
         options.onComplete(this.result('complete'));
       },
       onResult: function(inStatus, inResult) {
+        var contentType = this.options.contentType;
+        var xhr = this.xhr;
         return {
-          status: inStatus,
+          status: inStatus || 'unknown',
           code: inResult.code,
-          xhr: this.xhr
+          data: NxDataTransform[contentType](xhr.responseText),
+          xhr: xhr
         };
       },
       result: function(inStatus) {
@@ -145,13 +148,14 @@
           }
         };
 
-        // open and send
+        // open and send:
         xhr.open(this.method, this.url, this.options.async);
         this.onIntercept('request');
         this.setContentType();
         this.setHeaders();
         xhr.send(this.data);
 
+        // set timeout handler:
         this._timer && clearTimeout(this._timer);
         this._timer = global.setTimeout(function() {
           if (!isComplete) {

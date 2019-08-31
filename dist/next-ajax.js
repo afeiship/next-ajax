@@ -1,3 +1,11 @@
+/*!
+ * name: next-ajax
+ * url: https://github.com/afeiship/next-ajax
+ * version: 1.0.0
+ * date: 2019-08-31T15:47:40.305Z
+ * license: MIT
+ */
+
 (function() {
   var global = global || this || window || Function('return this')();
   var nx = global.nx || require('next-js-core2');
@@ -160,3 +168,5 @@
     module.exports = NxAjax;
   }
 })();
+
+//# sourceMappingURL=next-ajax.js.map

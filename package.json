@@ -33,6 +33,9 @@
     "yargs": "^4.7.1"
   },
   "dependencies": {
+    "next-capitalize": "github:afeiship/next-capitalize",
+    "next-content-type": "github:afeiship/next-content-type",
+    "next-data-transform": "github:afeiship/next-data-transform",
     "next-js-core2": "github:afeiship/next-js-core2",
     "next-json": "github:afeiship/next-json",
     "next-param": "github:afeiship/next-param",

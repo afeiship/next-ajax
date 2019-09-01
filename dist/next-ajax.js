@@ -2,7 +2,7 @@
  * name: next-ajax
  * url: https://github.com/afeiship/next-ajax
  * version: 1.0.0
- * date: 2019-09-01T03:57:27.176Z
+ * date: 2019-09-01T06:07:26.581Z
  * license: MIT
  */
 
@@ -56,7 +56,9 @@
       },
       $data: function() {
         var method = this.method;
-        return method === 'GET' ? this.data : null;
+        var contentType = this.options.contentType;
+        var data = NxDataTransform[contentType](this.data);
+        return method === 'GET' ? data : null;
       }
     },
     methods: {
@@ -65,7 +67,7 @@
         this.data = inData;
         this.url = inUrl;
         this.options = nx.mix(null, DEFAULT_OPTIONS, inOptions);
-        this.xhr = NxXhr.create();;
+        this.xhr = NxXhr.create();
         this.request();
       },
       intercept: function(inAction) {

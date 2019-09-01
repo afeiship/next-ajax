@@ -48,7 +48,9 @@
       },
       $data: function() {
         var method = this.method;
-        return method === 'GET' ? this.data : null;
+        var contentType = this.options.contentType;
+        var data = NxDataTransform[contentType](this.data);
+        return method === 'GET' ? data : null;
       }
     },
     methods: {
@@ -57,7 +59,7 @@
         this.data = inData;
         this.url = inUrl;
         this.options = nx.mix(null, DEFAULT_OPTIONS, inOptions);
-        this.xhr = NxXhr.create();;
+        this.xhr = NxXhr.create();
         this.request();
       },
       intercept: function(inAction) {

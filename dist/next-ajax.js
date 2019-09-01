@@ -2,7 +2,7 @@
  * name: next-ajax
  * url: https://github.com/afeiship/next-ajax
  * version: 1.0.0
- * date: 2019-08-31T15:51:15.522Z
+ * date: 2019-09-01T03:57:27.176Z
  * license: MIT
  */
 
@@ -24,14 +24,14 @@
     onRequest: nx.noop,
     onResponse: nx.noop,
     onSuccess: nx.noop,
-    onError: nx.noop,
+    onFail: nx.noop,
     onComplete: nx.noop,
     onTimeout: nx.noop
   };
 
   var NxAjax = nx.declare('nx.Ajax', {
     properties: {
-      success: {
+      $success: {
         get: function() {
           var xhr = this.xhr;
           try {
@@ -45,7 +45,7 @@
           return false;
         }
       },
-      url: {
+      $url: {
         get: function() {
           var method = this.method;
           var url = this.url;
@@ -54,7 +54,7 @@
             : url;
         }
       },
-      data: function() {
+      $data: function() {
         var method = this.method;
         return method === 'GET' ? this.data : null;
       }
@@ -62,25 +62,26 @@
     methods: {
       init: function(inMethod, inUrl, inData, inOptions) {
         this.method = (inMethod || 'GET').toUpperCase();
-        this.url = inUrl;
         this.data = inData;
+        this.url = inUrl;
         this.options = nx.mix(null, DEFAULT_OPTIONS, inOptions);
-        this.xhr = NxXhr.create();
+        this.xhr = NxXhr.create();;
+        this.request();
       },
-      onIntercept: function(inAction) {
+      intercept: function(inAction) {
         var action = 'on' + nxCapitalize(inAction);
-        inOptions[action]({
+        this.options[action]({
           xhr: this.xhr,
           method: this.method,
-          url: this.url,
-          xhr: this.data,
+          url: this.$url,
+          xhr: this.$data,
           options: this.options
         });
       },
       onStateChange: function() {
         var options = this.options;
-        if (this.success) {
-          this.onIntercept('response');
+        if (this.$success) {
+          this.intercept('response');
           options.onSuccess(this.result('success'));
         } else {
           options.onFail(this.result('fail'));
@@ -88,12 +89,11 @@
         options.onComplete(this.result('complete'));
       },
       onResult: function(inStatus, inResult) {
-        var contentType = this.options.contentType;
         var xhr = this.xhr;
         return {
           status: inStatus || 'unknown',
           code: inResult.code,
-          data: NxDataTransform[contentType](xhr.responseText),
+          data: nx.parse(xhr.responseText),
           xhr: xhr
         };
       },
@@ -149,11 +149,11 @@
         };
 
         // open and send:
-        xhr.open(this.method, this.url, this.options.async);
-        this.onIntercept('request');
+        xhr.open(this.method, this.$url, this.options.async);
+        this.intercept('request');
         this.setContentType();
         this.setHeaders();
-        xhr.send(this.data);
+        xhr.send(this.$data);
 
         // set timeout handler:
         this._timer && clearTimeout(this._timer);

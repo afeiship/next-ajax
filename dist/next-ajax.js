@@ -2,7 +2,7 @@
  * name: next-ajax
  * url: https://github.com/afeiship/next-ajax
  * version: 1.0.0
- * date: 2019-09-02T15:42:00.019Z
+ * date: 2019-09-02T23:03:18.569Z
  * license: MIT
  */
 
@@ -127,9 +127,10 @@
       response: function(inStatus) {
         var xhr = this.xhr;
         var options = this.options;
+        var code = nxDefaults(STATUS_CODE[inStatus], -1);
         return options.onResponse({
           status: inStatus,
-          code: nxDefaults(STATUS_CODE[inStatus], -1),
+          code: code,
           data: xhr.responseText,
           xhr: xhr
         });

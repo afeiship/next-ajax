@@ -119,9 +119,10 @@
       response: function(inStatus) {
         var xhr = this.xhr;
         var options = this.options;
+        var code = nxDefaults(STATUS_CODE[inStatus], -1);
         return options.onResponse({
           status: inStatus,
-          code: nxDefaults(STATUS_CODE[inStatus], -1),
+          code: code,
           data: xhr.responseText,
           xhr: xhr
         });

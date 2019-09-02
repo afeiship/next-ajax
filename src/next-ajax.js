@@ -93,8 +93,8 @@
           if (xhr.readyState === 4) {
             if (!isTimeout) {
               action = self.$success ? 'success' : 'fail';
-              options['on' + nxCapitalize(action)](self.response(action));
-              options.onComplete(self.response('complete'));
+              options['on' + nxCapitalize(action)](self.onResponse(action));
+              options.onComplete(self.onResponse('complete'));
             }
             isComplete = true;
           }
@@ -111,12 +111,12 @@
         timer = global.setTimeout(function() {
           if (!isComplete) {
             isTimeout = true;
-            options.onTimeout(self.response('timeout'));
-            options.onComplete(self.response('complete'));
+            options.onTimeout(self.onResponse('timeout'));
+            options.onComplete(self.onResponse('complete'));
           }
         }, options.timeout);
       },
-      response: function(inStatus) {
+      onResponse: function(inStatus) {
         var xhr = this.xhr;
         var options = this.options;
         return options.onResponse({

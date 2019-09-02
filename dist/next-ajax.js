@@ -2,7 +2,7 @@
  * name: next-ajax
  * url: https://github.com/afeiship/next-ajax
  * version: 1.0.0
- * date: 2019-09-02T15:13:30.107Z
+ * date: 2019-09-02T15:15:12.780Z
  * license: MIT
  */
 
@@ -101,8 +101,8 @@
           if (xhr.readyState === 4) {
             if (!isTimeout) {
               action = self.$success ? 'success' : 'fail';
-              options['on' + nxCapitalize(action)](self.response(action));
-              options.onComplete(self.response('complete'));
+              options['on' + nxCapitalize(action)](self.onResponse(action));
+              options.onComplete(self.onResponse('complete'));
             }
             isComplete = true;
           }
@@ -119,12 +119,12 @@
         timer = global.setTimeout(function() {
           if (!isComplete) {
             isTimeout = true;
-            options.onTimeout(self.response('timeout'));
-            options.onComplete(self.response('complete'));
+            options.onTimeout(self.onResponse('timeout'));
+            options.onComplete(self.onResponse('complete'));
           }
         }, options.timeout);
       },
-      response: function(inStatus) {
+      onResponse: function(inStatus) {
         var xhr = this.xhr;
         var options = this.options;
         return options.onResponse({

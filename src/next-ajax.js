@@ -93,8 +93,8 @@
           if (xhr.readyState === 4) {
             if (!isTimeout) {
               action = self.$success ? 'success' : 'fail';
-              options['on' + nxCapitalize(action)](self.onResponse(action));
-              options.onComplete(self.onResponse('complete'));
+              options['on' + nxCapitalize(action)](self.response(action));
+              options.onComplete(self.response('complete'));
             }
             isComplete = true;
           }
@@ -103,7 +103,7 @@
         //2. open and send:
         xhr.open(this.method, this.$url, this.options.async);
         this.header = { request: headers };
-        body = this.onRequest();
+        body = this.request();
         xhr.send(body);
 
         //3. set timeout handler:
@@ -111,12 +111,12 @@
         timer = global.setTimeout(function() {
           if (!isComplete) {
             isTimeout = true;
-            options.onTimeout(self.onResponse('timeout'));
-            options.onComplete(self.onResponse('complete'));
+            options.onTimeout(self.response('timeout'));
+            options.onComplete(self.response('complete'));
           }
         }, options.timeout);
       },
-      onResponse: function(inStatus) {
+      response: function(inStatus) {
         var xhr = this.xhr;
         var options = this.options;
         return options.onResponse({
@@ -126,7 +126,7 @@
           xhr: xhr
         });
       },
-      onRequest: function() {
+      request: function() {
         var options = this.options;
         return options.onRequest({
           xhr: this.xhr,

@@ -13,6 +13,7 @@
     success: 0,
     fail: 1,
     timeout: 2,
+    /** some codesgs backup */
     complete: 10
   };
   var DEFAULT_OPTIONS = {

@@ -2,7 +2,7 @@
  * name: next-ajax
  * url: https://github.com/afeiship/next-ajax
  * version: 1.0.0
- * date: 2019-09-02T15:31:42.747Z
+ * date: 2019-09-02T15:32:23.575Z
  * license: MIT
  */
 
@@ -21,6 +21,7 @@
     success: 0,
     fail: 1,
     timeout: 2,
+    /** some codesgs backup */
     complete: 10
   };
   var DEFAULT_OPTIONS = {

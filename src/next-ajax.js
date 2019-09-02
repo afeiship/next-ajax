@@ -76,7 +76,7 @@
         this.xhr.onreadystatechange = null;
         this.xhr = null;
       },
-      request: function() {
+      fetch: function() {
         var isTimeout = false;
         var isComplete = false;
         var options = this.options;

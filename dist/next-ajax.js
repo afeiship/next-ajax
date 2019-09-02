@@ -2,7 +2,7 @@
  * name: next-ajax
  * url: https://github.com/afeiship/next-ajax
  * version: 1.0.0
- * date: 2019-09-02T15:15:12.780Z
+ * date: 2019-09-02T15:16:44.610Z
  * license: MIT
  */
 
@@ -84,7 +84,7 @@
         this.xhr.onreadystatechange = null;
         this.xhr = null;
       },
-      request: function() {
+      fetch: function() {
         var isTimeout = false;
         var isComplete = false;
         var options = this.options;

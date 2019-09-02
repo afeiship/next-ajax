@@ -27,6 +27,14 @@
         },
         onFail: function(res) {
           console.log('res', res);
+        },
+        onRequest: function(inValue) {
+          console.log('on request', inValue);
+          return inValue.data;
+        },
+        onResponse: function(inValue) {
+          console.log('response', inValue);
+          return inValue;
         }
       }).fetch();
     </script>

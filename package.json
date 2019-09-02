@@ -38,9 +38,11 @@
     "next-capitalize": "github:afeiship/next-capitalize",
     "next-content-type": "github:afeiship/next-content-type",
     "next-data-transform": "github:afeiship/next-data-transform",
+    "next-defaults": "github:afeiship/next-defaults",
     "next-js-core2": "github:afeiship/next-js-core2",
     "next-json": "github:afeiship/next-json",
     "next-param": "github:afeiship/next-param",
-    "next-xhr": "github:afeiship/next-xhr"
+    "next-xhr": "github:afeiship/next-xhr",
+    "next-xhr-header": "github:afeiship/next-xhr-header"
   }
 }

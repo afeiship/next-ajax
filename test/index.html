@@ -6,12 +6,14 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>Document</title>
     <script src="/next-js-core2/dist/next-js-core2.js"></script>
+    <script src="/next-defaults/dist/next-defaults.js"></script>
     <script src="/next-capitalize/dist/next-capitalize.js"></script>
     <script src="/next-content-type/dist/next-content-type.js"></script>
     <script src="/next-param/dist/next-param.js"></script>
     <script src="/next-data-transform/dist/next-data-transform.js"></script>
     <script src="/next-json/dist/next-json.js"></script>
     <script src="/next-xhr/dist/next-xhr.js"></script>
+    <script src="/next-xhr-header/dist/next-xhr-header.js"></script>
     <script src="/next-ajax.js"></script>
   </head>
   <body>
@@ -26,7 +28,7 @@
         onFail: function(res) {
           console.log('res', res);
         }
-      });
+      }).request();
     </script>
   </body>
 </html>

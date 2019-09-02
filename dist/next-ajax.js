@@ -2,7 +2,7 @@
  * name: next-ajax
  * url: https://github.com/afeiship/next-ajax
  * version: 1.0.0
- * date: 2019-09-01T06:07:26.581Z
+ * date: 2019-09-02T15:13:30.107Z
  * license: MIT
  */
 
@@ -10,19 +10,26 @@
   var global = global || this || window || Function('return this')();
   var nx = global.nx || require('next-js-core2');
   var NxXhr = nx.Xhr || require('next-xhr');
-  var NxJson = nx.json || require('next-json');
   var nxParam = nx.param || require('next-param');
-  var nxContentType = nx.contentType || require('next-content-type');
   var nxCapitalize = nx.capitalize || require('next-capitalize');
+  var nxDefaults = nx.defaults || require('next-defaults');
   var NxDataTransform = nx.DataTransform || require('next-data-transform');
-  var CONTENT_TYPE = 'Content-Type';
+  var NxXhrHeader = nx.XhrHeader || require('next-xhr-header');
+  var RETURN_DATA = function(inValue) { return inValue && inValue.data; };
+  var RETURN_VALUE = function(inValue) { return inValue; };
+  var STATUS_CODE = {
+    success: 0,
+    fail: 1,
+    timeout: 2,
+    complete: 3
+  };
   var DEFAULT_OPTIONS = {
     async: true,
     timeout: 3000,
     contentType: 'json',
     headers: {},
-    onRequest: nx.noop,
-    onResponse: nx.noop,
+    onRequest: RETURN_DATA,
+    onResponse: RETURN_VALUE,
     onSuccess: nx.noop,
     onFail: nx.noop,
     onComplete: nx.noop,
@@ -54,11 +61,13 @@
             : url;
         }
       },
-      $data: function() {
-        var method = this.method;
-        var contentType = this.options.contentType;
-        var data = NxDataTransform[contentType](this.data);
-        return method === 'GET' ? data : null;
+      $data: {
+        get: function() {
+          var method = this.method;
+          var contentType = this.options.contentType;
+          var data = NxDataTransform[contentType](this.data);
+          return method === 'GET' ? data : null;
+        }
       }
     },
     methods: {
@@ -68,104 +77,72 @@
         this.url = inUrl;
         this.options = nx.mix(null, DEFAULT_OPTIONS, inOptions);
         this.xhr = NxXhr.create();
-        this.request();
+        this.header = new NxXhrHeader(this.xhr);
       },
-      intercept: function(inAction) {
-        var action = 'on' + nxCapitalize(inAction);
-        this.options[action]({
-          xhr: this.xhr,
-          method: this.method,
-          url: this.$url,
-          xhr: this.$data,
-          options: this.options
-        });
-      },
-      onStateChange: function() {
-        var options = this.options;
-        if (this.$success) {
-          this.intercept('response');
-          options.onSuccess(this.result('success'));
-        } else {
-          options.onFail(this.result('fail'));
-        }
-        options.onComplete(this.result('complete'));
-      },
-      onResult: function(inStatus, inResult) {
-        var xhr = this.xhr;
-        return {
-          status: inStatus || 'unknown',
-          code: inResult.code,
-          data: nx.parse(xhr.responseText),
-          xhr: xhr
-        };
-      },
-      result: function(inStatus) {
-        var res = { code: -1 };
-        switch (inStatus) {
-          case 'success':
-            res = { code: 0 };
-            break;
-          case 'fail':
-            res = { code: 1 };
-            break;
-          case 'timeout':
-            res = { code: 2 };
-            break;
-          case 'complete':
-            res = { code: 3 };
-            break;
-          default:
-            res = { code: -1 };
-            break;
-        }
-        return this.onResult(inStatus, res);
-      },
-      setContentType: function() {
-        var contentType = this.options.contentType;
-        this.xhr.setRequestHeader(CONTENT_TYPE, nxContentType(contentType));
-      },
-      setHeaders: function() {
-        var headers = this.options.headers;
-        nx.forIn(
-          headers,
-          function(key, value) {
-            this.xhr.setRequestHeader(key, value);
-          },
-          this
-        );
+      destroy: function() {
+        this.xhr.abort();
+        this.xhr.onreadystatechange = null;
+        this.xhr = null;
       },
       request: function() {
         var isTimeout = false;
         var isComplete = false;
         var options = this.options;
+        var contentType = options.contentType;
         var xhr = this.xhr;
+        var headers = nx.mix({ 'Content-Type': contentType }, options.headers);
         var self = this;
+        var timer = null;
+        var action;
+        var body;
 
+        //1. attache listener:
         xhr.onreadystatechange = function() {
-          if (xhr.readyState == 4) {
+          if (xhr.readyState === 4) {
             if (!isTimeout) {
-              self.onStateChange();
+              action = self.$success ? 'success' : 'fail';
+              options['on' + nxCapitalize(action)](self.response(action));
+              options.onComplete(self.response('complete'));
             }
             isComplete = true;
           }
         };
 
-        // open and send:
+        //2. open and send:
         xhr.open(this.method, this.$url, this.options.async);
-        this.intercept('request');
-        this.setContentType();
-        this.setHeaders();
-        xhr.send(this.$data);
+        this.header = { request: headers };
+        body = this.onRequest();
+        xhr.send(body);
 
-        // set timeout handler:
-        this._timer && clearTimeout(this._timer);
-        this._timer = global.setTimeout(function() {
+        //3. set timeout handler:
+        timer && clearTimeout(timer);
+        timer = global.setTimeout(function() {
           if (!isComplete) {
             isTimeout = true;
-            options.onTimeout(self.result('timeout'));
-            options.onComplete(self.result('complete'));
+            options.onTimeout(self.response('timeout'));
+            options.onComplete(self.response('complete'));
           }
         }, options.timeout);
+      },
+      response: function(inStatus) {
+        var xhr = this.xhr;
+        var options = this.options;
+        return options.onResponse({
+          status: inStatus,
+          code: nxDefaults(STATUS_CODE[inStatus], -1),
+          data: xhr.responseText,
+          xhr: xhr
+        });
+      },
+      onRequest: function() {
+        var options = this.options;
+        return options.onRequest({
+          xhr: this.xhr,
+          method: this.method,
+          url: this.$url,
+          data: this.$data,
+          options: options
+        });
       }
     }
   });

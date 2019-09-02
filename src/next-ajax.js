@@ -13,7 +13,6 @@
     success: 0,
     fail: 1,
     timeout: 2,
-    abort: 3,
     complete: 10
   };
   var DEFAULT_OPTIONS = {
@@ -23,7 +22,6 @@
     headers: {},
     onRequest: RETURN_DATA,
     onResponse: RETURN_VALUE,
-    onAbort: nx.noop,
     onSuccess: nx.noop,
     onFail: nx.noop,
     onComplete: nx.noop,
@@ -76,7 +74,6 @@
       destroy: function() {
         this.xhr.abort();
         this.xhr.onreadystatechange = null;
-        this.options.onAbort(this.onResponse('abort'));
       },
       fetch: function() {
         var isTimeout = false;

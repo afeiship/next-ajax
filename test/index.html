@@ -17,8 +17,12 @@
     <script src="/next-ajax.js"></script>
   </head>
   <body>
+    <button id="btn-send">Send Ajax</button>
+    <button id="btn-abort">Abort</button>
     <script>
-      new nx.Ajax('get', 'https://api.github.com/users/afeiship', null, {
+      var btnSend = document.getElementById('btn-send');
+      var btnAbort = document.getElementById('btn-abort');
+      var res = new nx.Ajax('get', 'https://api.github.com/users/afeiship', null, {
         onSuccess: function(res) {
           console.log(res);
         },
@@ -36,7 +40,16 @@
           console.log('response', inValue);
           return inValue;
         }
-      }).fetch();
+      });
+
+      btnSend.onclick = function() {
+        res.fetch();
+      };
+
+      btnAbort.onclick = function() {
+        console.log('res:', res);
+        res && res.destroy();
+      };
     </script>
   </body>
 </html>

@@ -2,7 +2,7 @@
  * name: next-ajax
  * url: https://github.com/afeiship/next-ajax
  * version: 1.0.0
- * date: 2019-09-02T15:18:59.450Z
+ * date: 2019-09-02T15:27:37.047Z
  * license: MIT
  */
 
@@ -21,7 +21,8 @@
     success: 0,
     fail: 1,
     timeout: 2,
-    complete: 3
+    abort: 3,
+    complete: 10
   };
   var DEFAULT_OPTIONS = {
     async: true,
@@ -30,6 +31,7 @@
     headers: {},
     onRequest: RETURN_DATA,
     onResponse: RETURN_VALUE,
+    onAbort: nx.noop,
     onSuccess: nx.noop,
     onFail: nx.noop,
     onComplete: nx.noop,
@@ -82,7 +84,7 @@
       destroy: function() {
         this.xhr.abort();
         this.xhr.onreadystatechange = null;
-        this.xhr = null;
+        this.options.onAbort(this.onResponse('abort'));
       },
       fetch: function() {
         var isTimeout = false;

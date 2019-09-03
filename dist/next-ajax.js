@@ -2,7 +2,7 @@
  * name: next-ajax
  * url: https://github.com/afeiship/next-ajax
  * version: 1.0.0
- * date: 2019-09-02T23:03:18.569Z
+ * date: 2019-09-03T01:56:59.209Z
  * license: MIT
  */
 
@@ -17,7 +17,7 @@
   var NxXhrHeader = nx.XhrHeader || require('next-xhr-header');
   var RETURN_DATA = function(inValue) { return inValue && inValue.data; };
   var RETURN_VALUE = function(inValue) { return inValue; };
-  var STATUS_CODE = {
+  var STATUS = {
     success: 0,
     fail: 1,
     timeout: 2,
@@ -38,6 +38,9 @@
   };
 
   var NxAjax = nx.declare('nx.Ajax', {
+    statics: {
+      STATUS: STATUS
+    },
     properties: {
       $success: {
         get: function() {
@@ -127,7 +130,7 @@
       response: function(inStatus) {
         var xhr = this.xhr;
         var options = this.options;
-        var code = nxDefaults(STATUS_CODE[inStatus], -1);
+        var code = nxDefaults(STATUS[inStatus], -1);
         return options.onResponse({
           status: inStatus,
           code: code,

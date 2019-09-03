@@ -2,7 +2,7 @@
  * name: next-ajax
  * url: https://github.com/afeiship/next-ajax
  * version: 1.0.0
- * date: 2019-09-03T01:56:59.209Z
+ * date: 2019-09-03T01:58:40.540Z
  * license: MIT
  */
 
@@ -39,7 +39,12 @@
 
   var NxAjax = nx.declare('nx.Ajax', {
     statics: {
-      STATUS: STATUS
+      STATUS: STATUS,
+      fetch: function(inMethod, inUrl, inData, inOptions) {
+        var instance = new NxAjax(inMethod, inUrl, inData, inOptions);
+        instance.fetch();
+        return instance;
+      }
     },
     properties: {
       $success: {

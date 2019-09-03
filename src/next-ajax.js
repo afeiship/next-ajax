@@ -31,7 +31,12 @@
 
   var NxAjax = nx.declare('nx.Ajax', {
     statics: {
-      STATUS: STATUS
+      STATUS: STATUS,
+      fetch: function(inMethod, inUrl, inData, inOptions) {
+        var instance = new NxAjax(inMethod, inUrl, inData, inOptions);
+        instance.fetch();
+        return instance;
+      }
     },
     properties: {
       $success: {

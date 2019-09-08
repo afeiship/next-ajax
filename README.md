@@ -7,9 +7,9 @@ npm install -S afeiship/next-ajax --registry=https://registry.npm.taobao.org
 ```
 
 ## apis
-| api | params | description   |
-|-----|--------|---------------|
-| get | -      | desc balabala |
+| api   | params | description |
+| ----- | ------ | ----------- |
+| fetch | -      | Fetch data. |
 
 ## usage
 ```js

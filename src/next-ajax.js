@@ -84,10 +84,10 @@
         this.xhr.abort();
         this.xhr.onreadystatechange = null;
       },
-      fetch: function() {
+      fetch: function(inOptions) {
         var isTimeout = false;
         var isComplete = false;
-        var options = this.options;
+        var options = nx.mix(this.options, inOptions);
         var contentType = options.contentType;
         var xhr = this.xhr;
         var headers = nx.mix({ 'Content-Type': contentType }, options.headers);

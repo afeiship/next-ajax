@@ -25,4 +25,5 @@ import NxAjax from 'next-ajax';
 - https://github.com/afeiship/next-xhr
 - https://github.com/afeiship/next-xhr-header
 - https://github.com/afeiship/next-content-type
+- https://github.com/wendux/Ajax-hook
 
